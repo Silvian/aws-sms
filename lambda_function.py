@@ -4,7 +4,7 @@ from exceptions import InvalidNumberException, ParsingException
 from parsers import parse_phone_number
 
 
-def handle(request, context):
+def handler(request, context):
     """
     Lambda function to trigger sns service to send sms.
     
@@ -21,7 +21,7 @@ def handle(request, context):
         message = request.get('message')
         phone_number = parse_phone_number(request.get('phone'), request.get('country_code'))
     except (InvalidNumberException, ParsingException) as e:
-        return {"message": e}
+        return {"message": str(e)}
     
     print('Sending sms message: "{}" to: {}'.format(message, phone_number))
     

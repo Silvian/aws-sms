@@ -1,4 +1,4 @@
-import phonenumbers
+from lib import phonenumbers
 
 from exceptions import InvalidNumberException, ParsingException
 
