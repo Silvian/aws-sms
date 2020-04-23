@@ -1,26 +1,30 @@
 import boto3
 
+from exceptions import InvalidNumberException, ParsingException
+from parsers import parse_phone_number
 
-def send_to_sns(request, context):
+
+def handle(request, context):
     """
     Lambda function to trigger sns service to send sms.
     
     Example request:
     {
-        "phone": "+0123456789"
+        "phone": "+44123456789",
+        "countryCode": "GB",
         "message": "Sample message text."
     }
     """
 
-    sns = boto3.client('sns')
+    try:
+        sns = boto3.client('sns')
+        message = request.get('message')
+        phone_number = parse_phone_number(request.get('phone'), request.get('country_code'))
+    except (InvalidNumberException, ParsingException) as e:
+        return {"message": e}
     
-    print("Sending sms message: {} to: {}".format(
-        request['message'], request['phone'])
-    )
+    print('Sending sms message: "{}" to: {}'.format(message, phone_number))
     
-    sns.publish(
-        PhoneNumber=request['phone'],
-        Message=request['message'],
-    )
+    sns.publish(PhoneNumber=phone_number, Message=message)
     
     return {"success": True}
