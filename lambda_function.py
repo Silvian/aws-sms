@@ -11,7 +11,7 @@ def handler(request, context):
     Example request:
     {
         "phone": "+44123456789",
-        "countryCode": "GB",
+        "country_code": "GB",
         "message": "Sample message text."
     }
     """
